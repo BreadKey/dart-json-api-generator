@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/dart/element/visitor2.dart';
 import 'package:build/build.dart';
 import 'package:json_api_annotation/json_api_annotation.dart';
 import 'package:source_gen/source_gen.dart';
@@ -28,12 +28,12 @@ class FunctionsApiGenerator extends GeneratorForAnnotation<FunctionsApi> {
         final returnType =
             (method.returnType as ParameterizedType).typeArguments[0];
 
-        final parameter = method.parameters[0];
+        final parameter = method.formalParameters.first;
 
         bool hasTimeout = false;
 
-        for (int i = 1; i < method.parameters.length; i++) {
-          final option = method.parameters[i];
+        for (int i = 1; i < method.formalParameters.length; i++) {
+          final option = method.formalParameters[i];
 
           if (option.name == "timeout") {
             hasTimeout = true;
@@ -61,7 +61,7 @@ class FunctionsApiGenerator extends GeneratorForAnnotation<FunctionsApi> {
   }
 }
 
-class _FunctionVisitor extends SimpleElementVisitor {
+class _FunctionVisitor extends SimpleElementVisitor2<void> {
   late DartType className;
   List<MethodElement> methods = [];
 
